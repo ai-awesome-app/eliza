@@ -362,7 +362,8 @@ export class TwitterPostClient {
         cleanedContent: string,
         roomId: UUID,
         newTweetContent: string,
-        twitterUsername: string
+        twitterUsername: string,
+        tweetId?: string
     ): Promise<Tweet> {
         try {
             elizaLogger.log(`Posting new tweet:\n`);
@@ -376,7 +377,7 @@ export class TwitterPostClient {
                     cleanedContent
                 );
             } else {
-                result = await this.sendStandardTweet(client, cleanedContent);
+                result = await this.sendStandardTweet(client, cleanedContent, tweetId);
             }
 
             const tweet = this.createTweetObject(
@@ -516,23 +517,14 @@ export class TwitterPostClient {
 
                 try {
                     elizaLogger.log(`Posting new tweet:\n ${cleanedContent}`);
-
-                    if (tweetId != "") {
-                        elizaLogger.debug(`tweetId: ${tweetId}, cleanedContent: ${cleanedContent}`)
-                        await this.client.twitterClient.sendQuoteTweet(
-                            cleanedContent,
-                            tweetId
-                        )
-                        return;
-                    }
-                    elizaLogger.debug(`cleanedContent: ${cleanedContent}`)
                     const tweet = await this.postTweet(
                         this.runtime,
                         this.client,
                         cleanedContent,
                         roomId,
                         cleanedContent,
-                        this.twitterUsername
+                        this.twitterUsername,
+                        tweetId || undefined
                     );
                     elizaLogger.debug(`tweet: ${JSON.stringify(tweet)}`)
                     tweetId = tweet.id;
