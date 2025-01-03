@@ -327,7 +327,7 @@ export interface State {
     [key: string]: unknown;
 
     /** Latest tweets content */
-    latestTweets: Memory[];
+    latestTweets: string;
 }
 
 /**

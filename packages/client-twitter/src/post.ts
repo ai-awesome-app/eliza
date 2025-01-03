@@ -429,7 +429,9 @@ export class TwitterPostClient {
                     twitterUserName: this.client.profile.username,
                 }
             );
-            state.latestTweets = this.client.fetchSearchTweets(topics, 20, SearchMode.Top)
+            state.latestTweets = (await this.client.fetchSearchTweets(topics, 20, SearchMode.Top)).tweets.map((tweet) => {
+                return `ID: ${tweet.id}\nFrom: ${tweet.name} (@${tweet.username})\nText: ${tweet.text}`;
+            });
 
             const context = composeContext({
                 state,
