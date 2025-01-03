@@ -111,7 +111,6 @@ function createAction(tool: Tool): Action {
     };
 }
 
-// , the return result is in JSON format, and it should not include code formatting characters
 function composeParameterContext(tool: Tool, state: State): string {
     const contextTemplate = `{{recentMessages}}
 
