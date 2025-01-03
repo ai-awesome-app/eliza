@@ -433,8 +433,7 @@ export class TwitterPostClient {
             const latestTweets = (await this.client.fetchSearchTweets(topics, 20, SearchMode.Top)).tweets.map((tweet) => {
                 return `ID: ${tweet.id}\nFrom: ${tweet.name} (@${tweet.username})\nText: ${tweet.text}`;
             });
-            // state.latestTweets = latestTweets.join(";")
-            elizaLogger.debug(`state.latestTweets: ${latestTweets}`);
+            state.latestTweets = latestTweets.join(";")
             elizaLogger.debug(`state.latestTweets: ${state.latestTweets}`);
 
             const context = composeContext({
