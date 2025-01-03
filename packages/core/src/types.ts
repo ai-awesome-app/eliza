@@ -325,6 +325,9 @@ export interface State {
 
     /** Additional dynamic properties */
     [key: string]: unknown;
+
+    /** Latest tweets content */
+    latestTweets: Memory[];
 }
 
 /**

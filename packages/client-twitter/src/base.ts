@@ -350,6 +350,8 @@ export class ClientBase extends EventEmitter {
         searchMode: SearchMode,
         cursor?: string
     ): Promise<QueryTweetsResponse> {
+        elizaLogger.debug(`query: ${query}, maxTweets: ${maxTweets}, searchMode: ${searchMode}, cursor: ${cursor}`);
+
         try {
             // Sometimes this fails because we are rate limited. in this case, we just need to return an empty array
             // if we dont get a response in 5 seconds, something is wrong

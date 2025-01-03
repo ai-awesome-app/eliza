@@ -1,4 +1,4 @@
-import { Tweet } from "agent-twitter-client";
+import {SearchMode, Tweet} from "agent-twitter-client";
 import {
     composeContext,
     generateText,
@@ -18,6 +18,9 @@ import { twitterMessageHandlerTemplate } from "./interactions.ts";
 import { DEFAULT_MAX_TWEET_LENGTH } from "./environment.ts";
 
 const twitterPostTemplate = `
+# Current Latest Tweets
+{{latestTweets}}
+
 # Areas of Expertise
 {{knowledge}}
 
@@ -411,6 +414,7 @@ export class TwitterPostClient {
 
             const topics = this.runtime.character.topics.join(", ");
 
+
             const state = await this.runtime.composeState(
                 {
                     userId: this.runtime.agentId,
@@ -425,6 +429,7 @@ export class TwitterPostClient {
                     twitterUserName: this.client.profile.username,
                 }
             );
+            state.latestTweets = this.client.fetchSearchTweets(topics, 20, SearchMode.Top)
 
             const context = composeContext({
                 state,
