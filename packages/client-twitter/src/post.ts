@@ -16,6 +16,7 @@ import { IImageDescriptionService, ServiceType } from "@elizaos/core";
 import { buildConversationThread } from "./utils.ts";
 import { twitterMessageHandlerTemplate } from "./interactions.ts";
 import { DEFAULT_MAX_TWEET_LENGTH } from "./environment.ts";
+import {extraInlineDeps} from "vitest/config";
 
 const twitterPostTemplate = `
 # Current Latest Tweets
@@ -432,6 +433,7 @@ export class TwitterPostClient {
             state.latestTweets = (await this.client.fetchSearchTweets(topics, 20, SearchMode.Top)).tweets.map((tweet) => {
                 return `ID: ${tweet.id}\nFrom: ${tweet.name} (@${tweet.username})\nText: ${tweet.text}`;
             });
+            elizaLogger.debug(`state.latestTweets: ${state.latestTweets}`);
 
             const context = composeContext({
                 state,
