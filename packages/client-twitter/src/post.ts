@@ -363,7 +363,7 @@ export class TwitterPostClient {
         roomId: UUID,
         newTweetContent: string,
         twitterUsername: string
-    ) {
+    ): Promise<Tweet> {
         try {
             elizaLogger.log(`Posting new tweet:\n`);
 
@@ -392,6 +392,8 @@ export class TwitterPostClient {
                 roomId,
                 newTweetContent
             );
+
+            return tweet;
         } catch (error) {
             elizaLogger.error("Error sending tweet:", error);
         }
@@ -431,7 +433,7 @@ export class TwitterPostClient {
                     twitterUserName: this.client.profile.username,
                 }
             );
-            const latestTweets = (await this.client.fetchSearchTweets(topics, 20, SearchMode.Top)).tweets.map((tweet) => {
+            const latestTweets = (await this.client.fetchSearchTweets(topics, 20, SearchMode.Latest)).tweets.map((tweet) => {
                 return `Link: ${tweet.permanentUrl}\nFrom: @${tweet.username}\nText: ${tweet.text}`;
             });
             state.latestTweets = latestTweets.join(";")
@@ -485,23 +487,6 @@ export class TwitterPostClient {
                 return;
             }
 
-            // Truncate the content to the maximum tweet length specified in the environment settings, ensuring the truncation respects sentence boundaries.
-            const maxTweetLength = this.client.twitterConfig.MAX_TWEET_LENGTH
-            if (maxTweetLength) {
-                cleanedContent = truncateToCompleteSentence(
-                    cleanedContent,
-                    maxTweetLength
-                );
-            }
-
-            const removeQuotes = (str: string) =>
-                str.replace(/^['"](.*)['"]$/, "$1");
-
-            const fixNewLines = (str: string) => str.replaceAll(/\\n/g, "\n");
-
-            // Final cleaning
-            cleanedContent = removeQuotes(fixNewLines(cleanedContent));
-
             if (this.isDryRun) {
                 elizaLogger.info(
                     `Dry run: would have posted tweet: ${cleanedContent}`
@@ -509,19 +494,52 @@ export class TwitterPostClient {
                 return;
             }
 
-            try {
-                elizaLogger.log(`Posting new tweet:\n ${cleanedContent}`);
-                this.postTweet(
-                    this.runtime,
-                    this.client,
-                    cleanedContent,
-                    roomId,
-                    newTweetContent,
-                    this.twitterUsername
-                );
-            } catch (error) {
-                elizaLogger.error("Error sending tweet:", error);
-            }
+            const cleanedContents = cleanedContent.split("\n\n");
+            let tweetId = "";
+            cleanedContents.map(async cleanedContent => {
+                // Truncate the content to the maximum tweet length specified in the environment settings, ensuring the truncation respects sentence boundaries.
+                const maxTweetLength = this.client.twitterConfig.MAX_TWEET_LENGTH
+                if (maxTweetLength) {
+                    cleanedContent = truncateToCompleteSentence(
+                        cleanedContent,
+                        maxTweetLength
+                    );
+                }
+
+                const removeQuotes = (str: string) =>
+                    str.replace(/^['"](.*)['"]$/, "$1");
+
+                const fixNewLines = (str: string) => str.replaceAll(/\\n/g, "\n");
+
+                // Final cleaning
+                cleanedContent = removeQuotes(fixNewLines(cleanedContent));
+
+                try {
+                    elizaLogger.log(`Posting new tweet:\n ${cleanedContent}`);
+
+                    if (tweetId) {
+                        elizaLogger.debug(`tweetId: ${tweetId}, cleanedContent: ${cleanedContent}`)
+                        await this.client.twitterClient.sendQuoteTweet(
+                            cleanedContent,
+                            tweetId
+                        )
+                        return;
+                    }
+                    elizaLogger.debug(`cleanedContent: ${cleanedContent}`)
+                    const tweet = await this.postTweet(
+                        this.runtime,
+                        this.client,
+                        cleanedContent,
+                        roomId,
+                        newTweetContent,
+                        this.twitterUsername
+                    );
+                    tweetId = tweet.id;
+                } catch (error) {
+                    elizaLogger.error("Error sending tweet:", error);
+                }
+            });
+
         } catch (error) {
             elizaLogger.error("Error generating new tweet:", error);
         }
