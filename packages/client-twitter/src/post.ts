@@ -496,7 +496,7 @@ export class TwitterPostClient {
 
             const cleanedContents = cleanedContent.split("\n\n");
             let tweetId = "";
-            cleanedContents.map(async cleanedContent => {
+            for (let cleanedContent of cleanedContents) {
                 // Truncate the content to the maximum tweet length specified in the environment settings, ensuring the truncation respects sentence boundaries.
                 const maxTweetLength = this.client.twitterConfig.MAX_TWEET_LENGTH
                 if (maxTweetLength) {
@@ -539,7 +539,7 @@ export class TwitterPostClient {
                 } catch (error) {
                     elizaLogger.error("Error sending tweet:", error);
                 }
-            });
+            }
 
         } catch (error) {
             elizaLogger.error("Error generating new tweet:", error);
