@@ -19,7 +19,7 @@ import { DEFAULT_MAX_TWEET_LENGTH } from "./environment.ts";
 import {extraInlineDeps} from "vitest/config";
 
 const twitterPostTemplate = `
-# Current Latest Tweets
+# Current Top Tweets
 {{latestTweets}}
 
 # Areas of Expertise
@@ -37,9 +37,9 @@ const twitterPostTemplate = `
 {{postDirections}}
 
 # Task: Generate a post in the voice and style and perspective of {{agentName}} @{{twitterUserName}}.
-Write a post that is {{adjective}} about {{topic}} (without mentioning {{topic}} directly), from the perspective of {{agentName}}. Do not add commentary or acknowledge this request, just write the post.
-Your response should be 1, 2, or 3 sentences (choose the length at random).
-Your response should not contain any questions. Brief, concise statements only. The total character count MUST be less than {{maxTweetLength}}. No emojis. Use \\n\\n (double spaces) between statements if there are multiple statements in your response.`;
+Write a post that is a summary current top tweets and then {{adjective}} about {{topic}} (without mentioning {{topic}} directly), from the perspective of {{agentName}}. You are allowed to have any creativity, questions, or even emotional inclinations, but you are not allowed to violate ethical standards and must not attack humanity..
+Your response should be between 20-40 sentences (choose the length at random).
+Your response should not contain any questions. Brief, concise statements only. The total character count MUST be less than {{maxTweetLength}}. No restrictions on emojis. Use \\n\\n (double spaces) between statements if there are multiple statements in your response.`;
 
 export const twitterActionTemplate =
     `
@@ -431,7 +431,7 @@ export class TwitterPostClient {
                 }
             );
             const latestTweets = (await this.client.fetchSearchTweets(topics, 20, SearchMode.Top)).tweets.map((tweet) => {
-                return `ID: ${tweet.id}\nFrom: ${tweet.name} (@${tweet.username})\nText: ${tweet.text}`;
+                return `Link: ${tweet.permanentUrl}\nFrom: @${tweet.username}\nText: ${tweet.text}`;
             });
             state.latestTweets = latestTweets.join(";")
             elizaLogger.debug(`state.latestTweets: ${state.latestTweets}`);
