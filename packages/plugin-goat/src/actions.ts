@@ -114,7 +114,7 @@ function createAction(tool: Tool): Action {
 function composeParameterContext(tool: Tool, state: State): string {
     const contextTemplate = `{{recentMessages}}
 
-Given the recent messages, extract the following information for the action "${tool.name}":
+Given the recent messages, extract the following information for the action "${tool.name}", the return result is in JSON format, and it should not include code formatting characters:
 ${addParametersToDescription("", tool.parameters)}
 `;
     return composeContext({ state, template: contextTemplate });
