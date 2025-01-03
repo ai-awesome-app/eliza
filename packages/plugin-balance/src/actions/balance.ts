@@ -101,14 +101,14 @@ export const balanceAction = {
         );
 
         try {
-            const transferResp = await action.getBalance(paramOptions);
+            const getBalanceResp = await action.getBalance(paramOptions);
             if (callback) {
                 callback({
-                    text: `Successfully query balance ${paramOptions.address} (${paramOptions.token} tokens on ${paramOptions.chain}. Amount: ${transferResp.amount}`,
+                    text: `Successfully query balance ${paramOptions.address} (${paramOptions.token} tokens on ${paramOptions.chain}. Amount: ${getBalanceResp.amount}`,
                     content: {
                         success: true,
-                        amount: transferResp.amount,
-                        address: transferResp.address,
+                        amount: getBalanceResp.amount,
+                        address: getBalanceResp.address,
                         chain: paramOptions.chain,
                     },
                 });
@@ -148,5 +148,5 @@ export const balanceAction = {
             },
         ],
     ],
-    similes: ["SEND_TOKENS", "TOKEN_TRANSFER", "MOVE_TOKENS"],
+    similes: ["QUERY_BALANCE"],
 };

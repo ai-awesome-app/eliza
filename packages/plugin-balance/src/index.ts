@@ -7,8 +7,8 @@ import { balanceAction } from "./actions/balance.ts";
 import { evmWalletProvider } from "./providers/wallet";
 
 export const balancePlugin: Plugin = {
-    name: "evm",
-    description: "EVM blockchain integration plugin",
+    name: "balance",
+    description: "EVM balance blockchain integration plugin",
     providers: [evmWalletProvider],
     evaluators: [],
     services: [],
