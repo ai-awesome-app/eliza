@@ -517,7 +517,7 @@ export class TwitterPostClient {
                 try {
                     elizaLogger.log(`Posting new tweet:\n ${cleanedContent}`);
 
-                    if (tweetId) {
+                    if (tweetId != "") {
                         elizaLogger.debug(`tweetId: ${tweetId}, cleanedContent: ${cleanedContent}`)
                         await this.client.twitterClient.sendQuoteTweet(
                             cleanedContent,
@@ -531,9 +531,10 @@ export class TwitterPostClient {
                         this.client,
                         cleanedContent,
                         roomId,
-                        newTweetContent,
+                        cleanedContent,
                         this.twitterUsername
                     );
+                    elizaLogger.debug(`tweet: ${JSON.stringify(tweet)}`)
                     tweetId = tweet.id;
                 } catch (error) {
                     elizaLogger.error("Error sending tweet:", error);
