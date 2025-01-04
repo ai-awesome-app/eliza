@@ -55,10 +55,11 @@ const twitterPostByTweetsTemplate = `
 
 # Task: Generate a post in the voice and style and perspective of {{agentName}} @{{twitterUserName}}.
 Write a post that is a summary current top tweets from the perspective of {{agentName}}. You can have any creativity, questions, even emotional tendencies or attack humans.
+Your response can include bold innovations and creativity, not limited to your area of expertise.
 Your response should be between 50 and 100 sentences (choose the length at random).
 Your response should not contain any questions. Brief, concise statements only.
 Use \\n\\n (double spaces) between statements if there are multiple statements in your response. The total character count MUST be less than {{maxTweetLength}} in one statements.
-Your reply should ultimately include the real link to the tweet that reference content from the "Current Tweet."
+Your reply should ultimately include some real links to the tweet that reference content from the "Current Tweet."
 Except for the link to the final reference chapter, no other content may contain any links.
 No restrictions on emojis. `;
 
