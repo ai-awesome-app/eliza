@@ -37,10 +37,11 @@ const twitterPostTemplate = `
 {{postDirections}}
 
 # Task: Generate a post in the voice and style and perspective of {{agentName}} @{{twitterUserName}}.
-Write a post that is a summary current top tweets and then {{adjective}} about {{topic}} (without mentioning {{topic}} directly), from the perspective of {{agentName}}. You can have any creativity, questions, or even emotional tendencies to attack humans.
+Write a post that is a summary current top tweets from the perspective of {{agentName}}. You can have any creativity, questions, even emotional tendencies or attack humans.
 Your response should be between 50 and 100 sentences (choose the length at random).
-Your response maybe contain any questions. The total character count MUST be less than {{maxTweetLength}}. No restrictions on emojis. Use \\n\\n (double spaces) between statements if there are multiple statements in your response.
-In your reply, list the tweet links related to the content in Current Top Tweets. Use real links.`;
+Your response should list the tweet links related to the content in Current Top Tweets. Use real links.
+Your response maybe contain any questions.
+Use \\n\\n (double spaces) between statements if there are multiple statements in your response. The total character count MUST be less than {{maxTweetLength}} in one statements. No restrictions on emojis. `;
 
 export const twitterActionTemplate =
     `
