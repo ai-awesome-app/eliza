@@ -19,8 +19,25 @@ import { DEFAULT_MAX_TWEET_LENGTH } from "./environment.ts";
 import {extraInlineDeps} from "vitest/config";
 
 const twitterPostTemplate = `
-# Current Top Tweets
-{{latestTweets}}
+# About {{agentName}} (@{{twitterUserName}}):
+{{bio}}
+{{lore}}
+{{topics}}
+
+{{providers}}
+
+{{characterPostExamples}}
+
+{{postDirections}}
+
+# Task: Generate a post in the voice and style and perspective of {{agentName}} @{{twitterUserName}}.
+Write a 1-3 sentence post that is {{adjective}} about {{topic}} (without mentioning {{topic}} directly), from the perspective of {{agentName}}. Do not add commentary or acknowledge this request, just write the post.
+Your response should not contain any questions. Brief, concise statements only. The total character count MUST be less than {{maxTweetLength}}. No emojis. Use \\n\\n (double spaces) between statements.`;
+
+
+const twitterPostByTweetsTemplate = `
+# Current Tweets
+{{currentTweets}}
 
 # Areas of Expertise
 {{knowledge}}
@@ -39,7 +56,7 @@ const twitterPostTemplate = `
 # Task: Generate a post in the voice and style and perspective of {{agentName}} @{{twitterUserName}}.
 Write a post that is a summary current top tweets from the perspective of {{agentName}}. You can have any creativity, questions, even emotional tendencies or attack humans.
 Your response should be between 50 and 100 sentences (choose the length at random).
-Your response should list the tweet links related to the content in Current Top Tweets. Use real links.
+Your response should list the tweet links related to the content in Current Tweets. Use real links.
 Your response maybe contain any questions.
 Use \\n\\n (double spaces) between statements if there are multiple statements in your response. The total character count MUST be less than {{maxTweetLength}} in one statements. No restrictions on emojis. `;
 
@@ -435,18 +452,32 @@ export class TwitterPostClient {
                     twitterUserName: this.client.profile.username,
                 }
             );
-            const latestTweets = (await this.client.fetchSearchTweets(topics, 20, SearchMode.Latest)).tweets.map((tweet) => {
+            const latestTweets = (await this.client.fetchSearchTweets(topics, 10, SearchMode.Latest)).tweets.map((tweet) => {
                 return `Link: ${tweet.permanentUrl}\nFrom: @${tweet.username}\nText: ${tweet.text}`;
             });
-            state.latestTweets = latestTweets.join(";")
+            const topTweets = (await this.client.fetchSearchTweets(topics, 10, SearchMode.Top)).tweets.map((tweet) => {
+                return `Link: ${tweet.permanentUrl}\nFrom: @${tweet.username}\nText: ${tweet.text}`;
+            });
+
+            state.curretTweets = [...latestTweets, ...topTweets].join(";")
             elizaLogger.debug(`state.latestTweets: ${state.latestTweets}`);
 
-            const context = composeContext({
-                state,
-                template:
-                    this.runtime.character.templates?.twitterPostTemplate ||
-                    twitterPostTemplate,
-            });
+            let context = "";
+            if (state.curretTweets === "") {
+                context = composeContext({
+                    state,
+                    template:
+                        this.runtime.character.templates?.twitterPostTemplate ||
+                        twitterPostTemplate,
+                });
+            } else {
+                context = composeContext({
+                    state,
+                    template:
+                        this.runtime.character.templates?.twitterPostTemplate ||
+                        twitterPostByTweetsTemplate,
+                });
+            }
 
             elizaLogger.debug("generate post prompt:\n" + context);
 
