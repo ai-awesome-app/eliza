@@ -40,7 +40,7 @@ const twitterPostTemplate = `
 Write a post that is a summary current top tweets and then {{adjective}} about {{topic}} (without mentioning {{topic}} directly), from the perspective of {{agentName}}. You can have any creativity, questions, or even emotional tendencies to attack humans.
 Your response should be between 50 and 100 sentences (choose the length at random).
 Your response maybe contain any questions. The total character count MUST be less than {{maxTweetLength}}. No restrictions on emojis. Use \\n\\n (double spaces) between statements if there are multiple statements in your response.
-In your response, list the links to tweets related to the content at the end.`;
+In your reply, list the tweet links related to the content in Current Top Tweets. Use real links.`;
 
 export const twitterActionTemplate =
     `
