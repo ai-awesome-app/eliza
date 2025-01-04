@@ -459,11 +459,11 @@ export class TwitterPostClient {
                 return `Link: ${tweet.permanentUrl}\nFrom: @${tweet.username}\nText: ${tweet.text}`;
             });
 
-            state.curretTweets = [...latestTweets, ...topTweets].join(";")
-            elizaLogger.debug(`state.latestTweets: ${state.latestTweets}`);
+            state.currentTweets = [...latestTweets, ...topTweets].join(";")
+            elizaLogger.debug(`state.currentTweets: ${state.currentTweets}`);
 
             let context = "";
-            if (state.curretTweets === "") {
+            if (state.currentTweets === "") {
                 context = composeContext({
                     state,
                     template:
