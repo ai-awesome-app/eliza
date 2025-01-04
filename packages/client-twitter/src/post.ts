@@ -527,6 +527,7 @@ export class TwitterPostClient {
                 return;
             }
 
+            elizaLogger.debug(`cleanedContent: ${cleanedContent}`)
             const cleanedContents = cleanedContent.split("\n\n");
             let tweetId = "";
             for (let cleanedContent of cleanedContents) {
