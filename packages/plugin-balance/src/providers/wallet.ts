@@ -75,11 +75,11 @@ export class WalletProvider {
         return chain;
     }
 
-    async getWalletBalance(): Promise<string | null> {
+    async getWalletBalance(address: Address): Promise<string | null> {
         try {
             const client = this.getPublicClient(this.currentChain);
             const balance = await client.getBalance({
-                address: this.account.address,
+                address,
             });
             return formatUnits(balance, 18);
         } catch (error) {
@@ -217,7 +217,7 @@ export const evmWalletProvider: Provider = {
         try {
             const walletProvider = initWalletProvider(runtime);
             const address = walletProvider.getAddress();
-            const balance = await walletProvider.getWalletBalance();
+            const balance = await walletProvider.getWalletBalance(address);
             const chain = walletProvider.getCurrentChain();
             return `EVM Wallet Address: ${address}\nBalance: ${balance} ${chain.nativeCurrency.symbol}\nChain ID: ${chain.id}, Name: ${chain.name}`;
         } catch (error) {

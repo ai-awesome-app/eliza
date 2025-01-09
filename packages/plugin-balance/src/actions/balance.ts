@@ -28,7 +28,7 @@ export class BalanceAction {
         this.walletProvider.switchChain(params.chain);
 
         try {
-            const balance = await this.walletProvider.getWalletBalance();
+            const balance = await this.walletProvider.getWalletBalance(params.address);
 
             return {
                 chain: params.chain,
