@@ -7,9 +7,7 @@ image attachments are the result of the users uploads, or images you have create
 only respond with the file location, no other text.
 typically the file location is in the form of a URL or a file path.
 
-\`\`\`json
 {
     "fileLocation": "file location text goes here"
 }
-\`\`\`
 `;
