@@ -280,6 +280,7 @@ export class DirectClient {
 
                 let message = null as Content | null;
 
+                elizaLogger.debug(`memory before processActions: ${memory}`)
                 await runtime.processActions(
                     memory,
                     [responseMessage],
@@ -289,6 +290,7 @@ export class DirectClient {
                         return [memory];
                     }
                 );
+                elizaLogger.debug(`memory after processActions: ${memory}`)
 
                 await runtime.evaluate(memory, state);
 
