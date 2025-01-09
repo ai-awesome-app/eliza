@@ -121,6 +121,10 @@ export class TwitterInteractionClient {
                 )
             ).tweets;
 
+            elizaLogger.debug(
+                "Completed checking mentioned tweets:",
+                JSON.stringify(mentionCandidates)
+            );
             elizaLogger.log(
                 "Completed checking mentioned tweets:",
                 mentionCandidates.length
@@ -215,6 +219,7 @@ export class TwitterInteractionClient {
                 );
             }
 
+            elizaLogger.debug(`uniqueTweetCandidates: ${JSON.stringify(uniqueTweetCandidates)}`)
             // Sort tweet candidates by ID in ascending order
             uniqueTweetCandidates
                 .sort((a, b) => a.id.localeCompare(b.id))
